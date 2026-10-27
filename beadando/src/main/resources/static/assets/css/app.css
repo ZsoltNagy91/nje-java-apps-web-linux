@@ -19,3 +19,24 @@
 td.num, th.num {
     text-align: right;
 }
+
+/* Diagramok: a vászon rugalmasan töltse ki a saját, korlátozott magasságú helyét. */
+.chart-container {
+    position: relative;
+    height: 28rem;
+    margin-bottom: 3rem;
+}
+
+.chart-container-small {
+    max-width: 48rem;
+    height: 32rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@media screen and (max-width: 736px) {
+    .chart-container,
+    .chart-container-small {
+        height: 22rem;
+    }
+}

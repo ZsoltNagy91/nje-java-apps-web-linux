@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="hu" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Diagramok')}"></head>
+<body class="is-preload">
+<div id="wrapper">
+    <header th:replace="~{fragments/layout :: header}"></header>
+    <nav th:replace="~{fragments/layout :: menu}"></nav>
+
+    <div id="main" class="alt">
+        <section>
+            <div class="inner">
+                <header class="major">
+                    <h1>NB I. statisztikák</h1>
+                    <p>A diagramok az adatbázisban szereplő játékosok adataiból készülnek.</p>
+                </header>
+
+                <div class="row">
+                    <div class="col-12">
+                        <h2>Klubok összértéke</h2>
+                        <p>A játékosértékek összege klubonként, ezer euróban.</p>
+                        <div class="chart-container"><canvas id="klubErtekChart" aria-label="Klubok összértéke ezer euróban" role="img"></canvas></div>
+                    </div>
+                    <div class="col-12">
+                        <h2>Játékosok posztonként</h2>
+                        <div class="chart-container chart-container-small"><canvas id="posztChart" aria-label="Játékosok eloszlása posztonként" role="img"></canvas></div>
+                    </div>
+                    <div class="col-12">
+                        <h2>Magyar és külföldi játékosok klubonként</h2>
+                        <p>A két kategória az adatbázis megfelelő jelölőmezői alapján készül.</p>
+                        <div class="chart-container"><canvas id="nemzetisegChart" aria-label="Magyar és külföldi játékosok száma klubonként" role="img"></canvas></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+</div>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<script th:inline="javascript">
+    const klubErtekNevek = /*[[${klubErtekNevek}]]*/ [];
+    const klubErtekAdatok = /*[[${klubErtekAdatok}]]*/ [];
+    const posztNevek = /*[[${posztNevek}]]*/ [];
+    const posztLetszamok = /*[[${posztLetszamok}]]*/ [];
+    const nemzetisegKlubNevek = /*[[${nemzetisegKlubNevek}]]*/ [];
+    const magyarLetszamok = /*[[${magyarLetszamok}]]*/ [];
+    const kulfoldiLetszamok = /*[[${kulfoldiLetszamok}]]*/ [];
+
+    const chartTextColor = '#ffffff';
+    Chart.defaults.color = chartTextColor;
+
+    new Chart(document.getElementById('klubErtekChart'), {
+        type: 'bar',
+        data: {
+            labels: klubErtekNevek,
+            datasets: [{
+                label: 'Összérték (ezer €)',
+                data: klubErtekAdatok,
+                backgroundColor: 'rgba(155, 241, 255, 0.72)',
+                borderColor: '#9bf1ff',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: { y: { beginAtZero: true, title: { display: true, text: 'Ezer euró' } } },
+            plugins: { legend: { display: false } }
+        }
+    });
+
+    new Chart(document.getElementById('posztChart'), {
+        type: 'doughnut',
+        data: {
+            labels: posztNevek,
+            datasets: [{
+                label: 'Játékosok száma',
+                data: posztLetszamok,
+                backgroundColor: ['#9bf1ff', '#6fc3df', '#8d82c4', '#ec8d81', '#e7b788', '#a3d977', '#f2d479', '#e49ac0', '#83c5be', '#cdb4db', '#b7d7a8', '#f6bd60', '#84a59d', '#f28482'],
+                borderColor: '#242943',
+                borderWidth: 2
+            }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+    });
+
+    new Chart(document.getElementById('nemzetisegChart'), {
+        type: 'bar',
+        data: {
+            labels: nemzetisegKlubNevek,
+            datasets: [
+                { label: 'Magyar', data: magyarLetszamok, backgroundColor: 'rgba(155, 241, 255, 0.72)' },
+                { label: 'Külföldi', data: kulfoldiLetszamok, backgroundColor: 'rgba(236, 141, 129, 0.78)' }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true, title: { display: true, text: 'Játékosok száma' } } }
+        }
+    });
+</script>
+</body>
+</html>
