@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="hu" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Adatbázis')}"></head>
+<body class="is-preload">
+<div id="wrapper">
+    <header th:replace="~{fragments/layout :: header}"></header>
+    <nav th:replace="~{fragments/layout :: menu}"></nav>
+
+    <div id="main" class="alt">
+        <section>
+            <div class="inner">
+                <header class="major">
+                    <h1>NB I. adatbázis</h1>
+                </header>
+
+                <h2>Labdarúgók</h2>
+                <form method="get" th:action="@{/adatbazis}" class="row gtr-uniform">
+                    <div class="col-8 col-12-small">
+                        <label for="klubId">Szűrés klub szerint</label>
+                        <select id="klubId" name="klubId">
+                            <option value="" th:selected="${kivalasztottKlubId == null}">Minden klub</option>
+                            <option th:each="klub : ${klubok}"
+                                    th:value="${klub.id}"
+                                    th:text="${klub.csapatnev}"
+                                    th:selected="${klub.id == kivalasztottKlubId}"></option>
+                        </select>
+                    </div>
+                    <div class="col-4 col-12-small">
+                        <label>&nbsp;</label>
+                        <ul class="actions">
+                            <li><button type="submit" class="primary">Szűrés</button></li>
+                            <li><a th:href="@{/adatbazis}" class="button">Törlés</a></li>
+                        </ul>
+                    </div>
+                </form>
+
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                        <tr><th>Név</th><th>Klub</th><th>Poszt</th><th class="num">Érték (ezer €)</th></tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="labdarugo : ${labdarugok}">
+                            <td th:text="${labdarugo.teljesNev}"></td>
+                            <td th:text="${labdarugo.klub.csapatnev}"></td>
+                            <td th:text="${labdarugo.poszt.nev}"></td>
+                            <td class="num" th:text="${#numbers.formatInteger(labdarugo.ertek, 1, 'WHITESPACE')}"></td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(labdarugok)}">
+                            <td colspan="4">A kiválasztott klubhoz nem található játékos.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <header class="major"><h2>Klubok</h2></header>
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr><th>Klub neve</th></tr></thead>
+                        <tbody>
+                        <tr th:each="klub : ${klubok}"><td th:text="${klub.csapatnev}"></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <header class="major"><h2>Posztok</h2></header>
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr><th>Poszt neve</th></tr></thead>
+                        <tbody>
+                        <tr th:each="poszt : ${posztok}"><td th:text="${poszt.nev}"></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+</div>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>
