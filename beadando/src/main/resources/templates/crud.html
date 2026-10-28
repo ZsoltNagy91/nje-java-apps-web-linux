@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="hu" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Játékosok kezelése')}"></head>
+<body class="is-preload">
+<div id="wrapper">
+    <header th:replace="~{fragments/layout :: header}"></header>
+    <nav th:replace="~{fragments/layout :: menu}"></nav>
+
+    <div id="main" class="alt">
+        <section>
+            <div class="inner">
+                <header class="major">
+                    <h1>Játékosok kezelése</h1>
+                    <p>Új labdarúgó felvétele és a jelenlegi játékosok listája.</p>
+                </header>
+
+                <p class="alert-success" th:if="${sikerUzenet}" th:text="${sikerUzenet}" role="status"></p>
+
+                <h2>Új labdarúgó felvétele</h2>
+                <form th:action="@{/crud}" th:object="${labdarugoForm}" method="post">
+                    <div class="row gtr-uniform">
+                        <div class="col-6 col-12-small">
+                            <label for="vezeteknev">Vezetéknév *</label>
+                            <input id="vezeteknev" type="text" th:field="*{vezeteknev}" maxlength="50" required/>
+                            <p class="field-error" th:if="${#fields.hasErrors('vezeteknev')}" th:errors="*{vezeteknev}"></p>
+                        </div>
+                        <div class="col-6 col-12-small">
+                            <label for="utonev">Utónév</label>
+                            <input id="utonev" type="text" th:field="*{utonev}" maxlength="50"/>
+                            <p class="field-error" th:if="${#fields.hasErrors('utonev')}" th:errors="*{utonev}"></p>
+                        </div>
+                        <div class="col-4 col-12-small">
+                            <label for="mezszam">Mezszám *</label>
+                            <input id="mezszam" type="number" th:field="*{mezszam}" min="0" required/>
+                            <p class="field-error" th:if="${#fields.hasErrors('mezszam')}" th:errors="*{mezszam}"></p>
+                        </div>
+                        <div class="col-4 col-12-small">
+                            <label for="klubId">Klub *</label>
+                            <select id="klubId" th:field="*{klubId}" required>
+                                <option value="">Válassz klubot</option>
+                                <option th:each="klub : ${klubok}" th:value="${klub.id}" th:text="${klub.csapatnev}"></option>
+                            </select>
+                            <p class="field-error" th:if="${#fields.hasErrors('klubId')}" th:errors="*{klubId}"></p>
+                        </div>
+                        <div class="col-4 col-12-small">
+                            <label for="posztId">Poszt *</label>
+                            <select id="posztId" th:field="*{posztId}" required>
+                                <option value="">Válassz posztot</option>
+                                <option th:each="poszt : ${posztok}" th:value="${poszt.id}" th:text="${poszt.nev}"></option>
+                            </select>
+                            <p class="field-error" th:if="${#fields.hasErrors('posztId')}" th:errors="*{posztId}"></p>
+                        </div>
+                        <div class="col-6 col-12-small">
+                            <label for="szulido">Születési dátum *</label>
+                            <input id="szulido" type="date" th:field="*{szulido}" required/>
+                            <p class="field-error" th:if="${#fields.hasErrors('szulido')}" th:errors="*{szulido}"></p>
+                        </div>
+                        <div class="col-6 col-12-small">
+                            <label for="ertek">Érték (ezer €) *</label>
+                            <input id="ertek" type="number" th:field="*{ertek}" min="0" required/>
+                            <p class="field-error" th:if="${#fields.hasErrors('ertek')}" th:errors="*{ertek}"></p>
+                        </div>
+                        <div class="col-6 col-12-small">
+                            <input id="magyar" type="checkbox" th:field="*{magyar}"/>
+                            <label for="magyar">Magyar játékos</label>
+                        </div>
+                        <div class="col-6 col-12-small">
+                            <input id="kulfoldi" type="checkbox" th:field="*{kulfoldi}"/>
+                            <label for="kulfoldi">Külföldi játékos</label>
+                        </div>
+                        <div class="col-12">
+                            <ul class="actions">
+                                <li><button type="submit" class="primary">Játékos mentése</button></li>
+                            </ul>
+                        </div>
+                    </div>
+                </form>
+
+                <header class="major"><h2>Játékoslista</h2></header>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                        <tr><th>Mezszám</th><th>Név</th><th>Klub</th><th>Poszt</th><th class="num">Érték (ezer €)</th></tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="labdarugo : ${labdarugok}">
+                            <td th:text="${labdarugo.mezszam}"></td>
+                            <td th:text="${labdarugo.teljesNev}"></td>
+                            <td th:text="${labdarugo.klub.csapatnev}"></td>
+                            <td th:text="${labdarugo.poszt.nev}"></td>
+                            <td class="num" th:text="${#numbers.formatInteger(labdarugo.ertek, 1, 'WHITESPACE')}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+</div>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>
