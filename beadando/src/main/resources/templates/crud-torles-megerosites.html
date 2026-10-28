@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="hu" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Játékos törlése')}"></head>
+<body class="is-preload">
+<div id="wrapper">
+    <header th:replace="~{fragments/layout :: header}"></header>
+    <nav th:replace="~{fragments/layout :: menu}"></nav>
+
+    <div id="main" class="alt">
+        <section>
+            <div class="inner">
+                <header class="major">
+                    <h1>Játékos törlése</h1>
+                </header>
+                <p>Biztosan törlöd ezt a labdarúgót? A művelet nem vonható vissza.</p>
+                <ul>
+                    <li><strong>Név:</strong> <span th:text="${labdarugo.teljesNev}"></span></li>
+                    <li><strong>Klub:</strong> <span th:text="${labdarugo.klub.csapatnev}"></span></li>
+                    <li><strong>Poszt:</strong> <span th:text="${labdarugo.poszt.nev}"></span></li>
+                </ul>
+                <form th:action="@{/crud/{id}/torles(id=${labdarugo.id})}" method="post">
+                    <ul class="actions">
+                        <li><button type="submit" class="button primary">Igen, törlés</button></li>
+                        <li><a th:href="@{/crud}" class="button">Mégse</a></li>
+                    </ul>
+                </form>
+            </div>
+        </section>
+    </div>
+
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+</div>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

@@ -15,6 +15,7 @@
                 </header>
 
                 <p class="alert-success" th:if="${sikerUzenet}" th:text="${sikerUzenet}" role="status"></p>
+                <p class="alert-error" th:if="${hibaUzenet}" th:text="${hibaUzenet}" role="alert"></p>
 
                 <h2>Új labdarúgó felvétele</h2>
                 <form th:action="@{/crud}" th:object="${labdarugoForm}" method="post">
@@ -80,7 +81,7 @@
                 <div class="table-wrapper">
                     <table>
                         <thead>
-                        <tr><th>Mezszám</th><th>Név</th><th>Klub</th><th>Poszt</th><th class="num">Érték (ezer €)</th></tr>
+                        <tr><th>Mezszám</th><th>Név</th><th>Klub</th><th>Poszt</th><th class="num">Érték (ezer €)</th><th>Műveletek</th></tr>
                         </thead>
                         <tbody>
                         <tr th:each="labdarugo : ${labdarugok}">
@@ -89,6 +90,12 @@
                             <td th:text="${labdarugo.klub.csapatnev}"></td>
                             <td th:text="${labdarugo.poszt.nev}"></td>
                             <td class="num" th:text="${#numbers.formatInteger(labdarugo.ertek, 1, 'WHITESPACE')}"></td>
+                            <td>
+                                <ul class="actions">
+                                    <li><a class="button small" th:href="@{/crud/{id}/szerkeszt(id=${labdarugo.id})}">Szerkesztés</a></li>
+                                    <li><a class="button small" th:href="@{/crud/{id}/torles(id=${labdarugo.id})}">Törlés</a></li>
+                                </ul>
+                            </td>
                         </tr>
                         </tbody>
                     </table>
