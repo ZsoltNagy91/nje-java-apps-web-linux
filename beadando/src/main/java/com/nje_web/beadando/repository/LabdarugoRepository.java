@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface LabdarugoRepository extends JpaRepository<Labdarugo, Integer> {
 
@@ -19,6 +20,9 @@ public interface LabdarugoRepository extends JpaRepository<Labdarugo, Integer> {
     @Query("select l from Labdarugo l join fetch l.klub join fetch l.poszt " +
             "where l.klub.id = :klubId order by l.vezeteknev, l.utonev")
     List<Labdarugo> findByKlubIdWithKlubAndPoszt(@Param("klubId") Integer klubId);
+
+    @Query("select l from Labdarugo l join fetch l.klub join fetch l.poszt where l.id = :id")
+    Optional<Labdarugo> findWithKlubAndPosztById(@Param("id") Integer id);
 
     @Query("select new com.nje_web.beadando.dto.KlubErtekOsszesito(l.klub.csapatnev, sum(l.ertek)) " +
             "from Labdarugo l group by l.klub.id, l.klub.csapatnev order by l.klub.csapatnev")

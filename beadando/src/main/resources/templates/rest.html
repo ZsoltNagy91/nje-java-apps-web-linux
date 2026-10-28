@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="hu" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('REST API')}"></head>
+<body class="is-preload">
+<div id="wrapper">
+    <header th:replace="~{fragments/layout :: header}"></header>
+    <nav th:replace="~{fragments/layout :: menu}"></nav>
+
+    <div id="main" class="alt">
+        <section>
+            <div class="inner">
+                <header class="major">
+                    <h1>Labdarúgó REST API</h1>
+                    <p>JSON alapú végpontok a játékosok lekérdezéséhez és kezeléséhez.</p>
+                </header>
+
+                <h2>Végpontok</h2>
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr><th>Metódus</th><th>Útvonal</th><th>Művelet</th><th>Sikeres válasz</th></tr></thead>
+                        <tbody>
+                        <tr><td>GET</td><td><code>/api/labdarugok</code></td><td>Játékosok listája</td><td>200 OK</td></tr>
+                        <tr><td>GET</td><td><code>/api/labdarugok/{id}</code></td><td>Egy játékos lekérése</td><td>200 OK</td></tr>
+                        <tr><td>POST</td><td><code>/api/labdarugok</code></td><td>Új játékos létrehozása</td><td>201 Created</td></tr>
+                        <tr><td>PUT</td><td><code>/api/labdarugok/{id}</code></td><td>Játékos adatainak módosítása</td><td>200 OK</td></tr>
+                        <tr><td>DELETE</td><td><code>/api/labdarugok/{id}</code></td><td>Játékos törlése</td><td>204 No Content</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>A POST és PUT kérések <code>application/json</code> tartalomtípust várnak. Hibás mező vagy ismeretlen klub/poszt esetén 400-as válasz érkezik, nem létező játékosnál 404.</p>
+
+                <h2>Kérés törzse</h2>
+                <pre><code>{
+  "mezszam": 99,
+  "klubId": 1,
+  "posztId": 9,
+  "utonev": "Minta",
+  "vezeteknev": "Játékos",
+  "szulido": "2000-01-15",
+  "magyar": true,
+  "kulfoldi": false,
+  "ertek": 100
+}</code></pre>
+                <p>A klub- és posztazonosítók a <a th:href="@{/adatbazis}">adatbázis oldalon</a> látható csapatokhoz és posztokhoz tartoznak. Az érték ezer euróban értendő.</p>
+
+                <h2>cURL példa</h2>
+                <h3>Lista lekérése</h3>
+                <pre><code>curl -i http://localhost:8080/nb1/api/labdarugok</code></pre>
+                <h3>Új játékos létrehozása</h3>
+                <pre><code>curl.exe -i -X POST http://localhost:8080/nb1/api/labdarugok -H "Content-Type: application/json" -d '{"mezszam":99,"klubId":1,"posztId":9,"utonev":"Minta","vezeteknev":"Játékos","szulido":"2000-01-15","magyar":true,"kulfoldi":false,"ertek":100}'</code></pre>
+                <h3>Játékos módosítása vagy törlése</h3>
+                <pre><code>curl.exe -i -X PUT http://localhost:8080/nb1/api/labdarugok/319 -H "Content-Type: application/json" -d '{"mezszam":10,"klubId":1,"posztId":9,"utonev":"Minta","vezeteknev":"Játékos","szulido":"2000-01-15","magyar":true,"kulfoldi":false,"ertek":125}'
+
+curl.exe -i -X DELETE http://localhost:8080/nb1/api/labdarugok/319</code></pre>
+                <p>A példák Windows parancssorból futtatható <code>curl.exe</code>-t használnak; Linux/macOS rendszeren a <code>curl.exe</code> helyett <code>curl</code> írandó.</p>
+
+                <h2>Postman használata</h2>
+                <ol>
+                    <li>Hozz létre egy kérést, és válaszd ki a GET, POST, PUT vagy DELETE metódust.</li>
+                    <li>Állítsd be az URL-t a táblázat szerinti végpontra, például <code>http://localhost:8080/nb1/api/labdarugok</code>.</li>
+                    <li>POST és PUT esetén válaszd a <strong>Body → raw → JSON</strong> beállítást, majd illeszd be a fenti JSON-t.</li>
+                    <li>Kattints a <strong>Send</strong> gombra. A válaszkód és a JSON válasz a Postman alsó paneljén jelenik meg.</li>
+                </ol>
+                <p>A teljes, importálható kérésgyűjtemény: <a th:href="@{/docs/NB1-Labdarugo-API.postman_collection.json}" download>NB I. labdarúgó API – Postman collection</a>.</p>
+                <p>A helyi alkalmazás tesztadatai minden újraindításkor újratöltődnek; az API-n létrehozott rekordok tesztelés után törölhetők a DELETE kéréssel.</p>
+            </div>
+        </section>
+    </div>
+
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+</div>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

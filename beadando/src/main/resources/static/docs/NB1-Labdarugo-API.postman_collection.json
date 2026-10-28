@@ -1,0 +1,76 @@
+{
+  "info": {
+    "name": "NB I. labdarúgó REST API",
+    "description": "A beadandó /api/labdarugok végpontjainak példái. Alapértelmezett helyi cím: http://localhost:8080/nb1",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080/nb1" },
+    { "key": "labdarugoId", "value": "319" }
+  ],
+  "item": [
+    {
+      "name": "Labdarúgók listázása",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/labdarugok"
+      }
+    },
+    {
+      "name": "Labdarúgó lekérése azonosító alapján",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/labdarugok/{{labdarugoId}}"
+      }
+    },
+    {
+      "name": "Új labdarúgó létrehozása",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "if (pm.response.code === 201) {",
+              "    pm.collectionVariables.set('labdarugoId', pm.response.json().id);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"mezszam\": 99,\n  \"klubId\": 1,\n  \"posztId\": 9,\n  \"utonev\": \"Minta\",\n  \"vezeteknev\": \"Játékos\",\n  \"szulido\": \"2000-01-15\",\n  \"magyar\": true,\n  \"kulfoldi\": false,\n  \"ertek\": 100\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": "{{baseUrl}}/api/labdarugok"
+      }
+    },
+    {
+      "name": "Labdarúgó módosítása",
+      "request": {
+        "method": "PUT",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"mezszam\": 10,\n  \"klubId\": 1,\n  \"posztId\": 9,\n  \"utonev\": \"Minta\",\n  \"vezeteknev\": \"Játékos\",\n  \"szulido\": \"2000-01-15\",\n  \"magyar\": true,\n  \"kulfoldi\": false,\n  \"ertek\": 125\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": "{{baseUrl}}/api/labdarugok/{{labdarugoId}}"
+      }
+    },
+    {
+      "name": "Labdarúgó törlése",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": "{{baseUrl}}/api/labdarugok/{{labdarugoId}}"
+      }
+    }
+  ]
+}
